@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.easybuy.dao.user.UserMapper">
+	<!-- 实现cn.easybuy.dao.user.UserMapper接口中的getUserList方法 -->
+	<select id="getUserList" resultType="User">
+		select * from easybuy_user limit #{startLineIndex},#{pageSize}		
+	</select>
+	<!-- 实现新增用户的方法add -->
+	<insert id="add" parameterType="User">
+		insert into easybuy_user 
+		<trim prefix="(" prefixOverrides="," suffix=")" suffixOverrides=",">
+		<if test="loginName!=null">
+		loginname
+		</if>
+		<if test="userName!=null">
+		,userName
+		</if>
+		<if test="password!=null">
+		,password
+		</if>
+		<if test="sex!=null">
+		,sex
+		</if>
+		<if test="identityCode!=null">
+		,identityCode
+		</if>
+		<if test="email!=null">
+		,email
+		</if>
+		<if test="mobile!=null">
+		,mobile
+		</if>
+		<if test="type!=null">
+		,type
+		</if>
+		</trim>
+		VALUES
+		<trim prefix="(" prefixOverrides="," suffix=")" suffixOverrides=",">
+		<if test="loginName!=null">
+		#{loginName}
+		</if>
+		<if test="userName!=null">
+		,#{userName}
+		</if>
+		<if test="password!=null">
+		,#{password}
+		</if>
+		<if test="sex!=null">
+		,#{sex}
+		</if>
+		<if test="identityCode!=null">
+		,#{identityCode}
+		</if>
+		<if test="email!=null">
+		,#{email}
+		</if>
+		<if test="mobile!=null">
+		,#{mobile}
+		</if>
+		<if test="type!=null">
+		,#{type}
+		</if>
+		</trim>
+	</insert>
+	<select id="getUser" resultType="User">
+		select * from easybuy_user
+		<where>
+			<if test="id!=null">
+				 id=#{id}
+			</if>
+			<if test="loginName!=null">
+				and loginName=#{loginName}
+			</if>
+		</where>
+	</select>
+</mapper>
+
