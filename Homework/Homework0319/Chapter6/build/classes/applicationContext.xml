@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:p="http://www.springframework.org/schema/p"
+	   xmlns:aop="http://www.springframework.org/schema/aop"
+
+
+	   xsi:schemaLocation="
+	    http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+		http://www.springframework.org/schema/aop
+		http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
+		">
+
+	<bean id="user1" class="org.bw.aopextend.demo1.entity.User">
+		<!--<property name="id" value="1" /> property属性	这是使用set方法赋值的-->
+		<constructor-arg index="0" value="1"></constructor-arg>
+		<constructor-arg index="1" value="哈哈"></constructor-arg>
+	</bean>
+
+	<bean id="peopleSay" class="org.bw.aopextend.demo1.entity.PeopleSay">
+		<constructor-arg index="0" value="张嘎"></constructor-arg>
+		<constructor-arg index="1" value="三天不打小鬼子，手都痒痒。"></constructor-arg>
+		<constructor-arg index="2" value="Rod"></constructor-arg>
+		<constructor-arg index="3" value="世界上有10种人，认识二进制和不认识二进制的。"></constructor-arg>
+	</bean>
+
+	<!--使用p命名空间注入给User对象数据	没有子元素就不如用,用一个就够了 直接/  这是注入值-->
+	<bean id="user2" class="org.bw.aopextend.demo1.entity.User" p:id="2" p:name="李四"/>
+
+	<bean id="peopleSay2" class="org.bw.aopextend.demo1.entity.PeopleSay"
+		  p:name="张嘎" p:words="三天不打小鬼子，手都痒痒。"
+		  p:name2="Rod" p:words2="世界上有10种人，认识二进制和不认识二进制的。"
+	/>
+
+	<bean id="user3" class="org.bw.aopextend.demo1.entity.User" p:id="1" p:name="张三"/>
+	<bean id="userDao" class="org.bw.aopextend.demo1.dao.impl.UserDaoImpl"/>
+	<bean id="userService" class="org.bw.aopextend.demo1.service.impl.UserServiceImpl" p:userDao-ref="userDao"/>
+
+	<!--不同类型的属性注入值-->
+	<!--内部的一个bean-->
+	<bean id="user" class="org.bw.aopextend.demo1.entity.User">
+		<property name="id" value="1"/>
+		<property name="name" value="list"/>
+	</bean>
+
+	<!--这种只能用一次-->
+	<bean id="testDigTypeValue" class="org.bw.aopextend.demo3.TestDifTypeValue">
+		<property name="innerUser">
+			<bean class="org.bw.aopextend.demo1.entity.User">
+				<property name="id" value="1"/>
+				<property name="name" value="lisi"/>
+			</bean>
+		</property>
+		<!--数组作为属性注入值-->
+		<property name="arrCountry">
+			<array>
+				<value>CN</value>
+				<value>USA</value>
+				<value>UK</value>
+				<value>JP</value>
+				<value>KR</value>
+				<value>Germany</value>
+			</array>
+		</property>
+		<!--List集合作为属性注入值-->
+		<property name="listCyty">
+			<list>
+				<value>Beijing</value>
+				<value>Shanghai</value>
+				<value>Guangzhou</value>
+				<value>Shenzhen</value>
+			</list>
+		</property>
+		<!--Map集合作为属性注入值-->
+		<property name="mapCountry">
+			<map>
+				<entry key="CN" value="中国"/>
+				<entry key="US" value="美国"/>
+			</map>
+		</property>
+		<!--Properties集合作为属性注入值-->
+		<property name="dbProperties">
+			<props>
+				<prop key="driver">com...driver</prop>
+				<prop key="uri">jdbc:mysql://.....</prop>
+			</props>
+		</property>
+		<!--空值作为属性注入值-->
+		<property name="nullValue">
+			<null/>
+		</property>
+		<!--空字符串值作为属性注入值-->
+		<property name="blankValue">
+			<value></value>
+		</property>
+	</bean>
+
+	<!--异常抛出增强-->
+	<!--1、声明切点对象-->
+	<bean id="loggerAOP" class="org.bw.spring.aop.demo1.aop.AOPLogger"/>
+	<!--2、增强配置-->
+	<aop:config>
+		<!--声明切入点:业务里的所有方法-->
+		<aop:pointcut expression="execution(* org.bw.aopextend.demo1.service..*.*(..))" id="pointcut"/>
+		<!-- 声明切面 -->
+		<aop:aspect ref="loggerAOP">
+<!--			<aop:before method="before" pointcut-ref="pointcut" />-->
+<!--			<aop:after-returning method="afterReturning" pointcut-ref="pointcut" returning="result" />-->
+<!--			<aop:after-throwing method="afterThrowing" pointcut-ref="pointcut" throwing="e"/>-->
+<!--			<aop:after method="after" pointcut-ref="pointcut" />-->
+			<aop:around method="around" pointcut-ref="pointcut" />
+		</aop:aspect>
+	</aop:config>
+	<!-- 声明一个UserDao -->
+	<bean id="UserDao2" class="org.bw.aopextend.demo1.dao.impl.UserDaoImpl"/>
+	<!-- 声明一个UserService对象 -->
+	<bean id="userService2" class="org.bw.aopextend.demo1.service.impl.UserServiceImpl">
+		<property name="userDao" ref="userDao"></property>
+	</bean>
+
+
+</beans>

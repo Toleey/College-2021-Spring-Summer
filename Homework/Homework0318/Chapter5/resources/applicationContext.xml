@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+	http://www.springframework.org/schema/aop
+	http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
+	">
+
+	<!-- 让SpringIoC容器生成一个HelloSpring对象 -->
+	<bean id = "hello" class = "edu.bw.Spring.ioc.demo1.HelloSpring">
+		<!-- 给容器产生的HelloSpring对象复制 -->
+		<property name="word" >
+			<value>HelloSpring</value>
+		</property>
+	</bean>
+
+	<bean id="peopleSay" class="edu.bw.Spring.ioc.demo1.PeopleSay">
+		<property name="name" >
+			<value>张嘎</value>
+		</property>
+		<property name="words">
+			<value>三天不打小鬼子，手都痒痒</value>
+		</property>
+
+	</bean>
+
+	<bean id="peopleSay2" class="edu.bw.Spring.ioc.demo1.PeopleSay">
+		<property name="name" >
+			<value>Rod</value>
+		</property>
+		<property name="words">
+			<value>世界上有10种人，认识二进制和不认识二进制的。</value>
+		</property>
+	</bean>
+
+	<bean id="printer" class="edu.bw.Spring.ioc.demo1.Printer">
+		<property name="printColor">
+			<value>灰色</value>
+		</property>
+		<property name="paperType">
+			<value>A4</value>
+		</property>
+	</bean>
+
+	<!--构建打印机-->
+	<!--买纸-->
+
+	<!--A4纸-->
+	<bean id="a4paper" class="edu.bw.Spring.ioc.printer.paper.A4Paper">
+		<property name="paperType" value="a4纸张" />
+	</bean>
+	<!--彩色墨盒-->
+	<bean id="colorInk" class="edu.bw.Spring.ioc.printer.ink.ColorInk">
+		<property name="inkColor" value="彩色墨盒" />
+	</bean>
+
+	<!--B5纸-->
+	<bean id="b5paper" class="edu.bw.Spring.ioc.printer.paper.B5Paper">
+		<property name="paperType" value="b5纸张" />
+	</bean>
+	<!--黑白墨盒-->
+	<bean id="blackInk" class="edu.bw.Spring.ioc.printer.ink.BlackInk">
+		<property name="inkColor" value="黑白墨盒" />
+	</bean>
+
+	<!--组装打印机-->
+	<bean id="printer2" class="edu.bw.Spring.ioc.printer.Printer">
+		<property name="paper" ref="b5paper" />
+		<property name="ink" ref="blackInk" />
+	</bean>
+
+	<!--组装打印机-->
+<!--	<bean id="a4Colorprinter" class="edu.bw.Spring.ioc.printer.Printer">-->
+<!--		<property name="paper" ref="a4paper" />-->
+<!--		<property name="ink" ref="colorInk" />-->
+<!--	</bean>-->
+
+	<!--ioc示例使用前置后置增强给业务方法动态增加日志处理-->
+	<!--声明一个增强对象-->
+	<bean id="theLogger" class="edu.bw.Spring.aop.demo1.logger.UserServiceLogger" />
+	<!--配置增强-->
+	<aop:config>
+		<!--定义切入点  exp…切入到哪个方法中  只要调用切入点表达式的方法，这些方法就会被增强-->
+		<aop:pointcut expression="execution(public void addNewUser(edu.bw.Spring.aop.demo1.entity.User))" id="pointcut"/>
+	<!--由谁来增强它，并且如何增强-->
+	<!--定义切面-->
+		<aop:aspect ref="theLogger">
+		<!--前置增强 这个标记决定了要前置增强   决定切到那个切入点  -->
+			<aop:before method="before" pointcut-ref="pointcut" />
+		<!--后置增强-->
+			<aop:after-returning method="afterReturning" pointcut-ref="pointcut" returning="result" />
+		</aop:aspect>
+	</aop:config>
+
+	<!--产生(声明)一个UserDao实例-->
+	<bean id="UserDao" class="edu.bw.Spring.aop.demo1.dao.impl.UserDaoImpl" ></bean>
+	<!--声明一个UserService对象-->
+	<bean id="UserService" class="edu.bw.Spring.aop.demo1.service.impl.UserServiceImpl" >
+		<property name="userDao" ref="UserDao" ></property>
+	</bean>
+	<!--产生一个User对象-->
+	<bean id="User" class="edu.bw.Spring.aop.demo1.entity.User">
+		<property name="id" value="001"></property>
+		<property name="name" value="大包子"></property>
+		<property name="email" value="cccc@c.com"></property>
+	</bean>
+
+
+	<!--                            Phone                              -->
+	<bean id="phoneLogger" class="edu.bw.Spring.aop.demo2.logger.PhoneServiceLogger" />
+	<aop:config>
+		<aop:pointcut id="phonePonintCut"
+					  expression="execution(public void addNewPhone(edu.bw.Spring.aop.demo2.entity.Phone))"/>
+		<aop:aspect ref="phoneLogger">
+			<aop:before method="before" pointcut-ref="phonePonintCut" />
+			<aop:after-returning method="afterReturning" pointcut-ref="phonePonintCut" returning="result"/>
+		</aop:aspect>
+	</aop:config>
+
+	<bean id="PhoneDao" class="edu.bw.Spring.aop.demo2.dao.service.PhoneDaoImpl" />
+
+	<bean id="PhoneService" class="edu.bw.Spring.aop.demo2.service.impl.PhoneServiceImpl">
+		<property name="phoneDao" ref="PhoneDao"></property>
+	</bean>
+
+	<bean id="phone" class="edu.bw.Spring.aop.demo2.entity.Phone">
+		<property name="id" value="01"></property>
+		<property name="name" value="Apple"></property>
+		<property name="price" value="2000.00"></property>
+	</bean>
+
+
+
+</beans>
