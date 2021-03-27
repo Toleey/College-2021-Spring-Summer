@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.toleey.smbms.dao.provider.ProviderDao.java">
+    <resultMap id="providerResultMap" type="Provider">
+        <!--主键都用id来配-->
+        <id column="id" property="id" />
+        <!--非主键都用result来配-->
+        <!--其他列名和属性名一样,会自动映射,就不用配了-->
+    </resultMap>
+
+    <select id="getAllProviderList" resultMap="providerResultMap">
+    SELECT * FROM  smbms_provider
+    </select>
+
+
+
+</mapper>
