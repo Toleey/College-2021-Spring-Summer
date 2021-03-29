@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.toleey.smbms.dao.bill.BillMapper">
+
+    <resultMap id="billResultMap" type="Bill">
+        <id column="id" property="id" />
+        <id column="proName" property="proName" />
+    </resultMap>
+    
+    <select id="selectBill" resultMap="billResultMap">
+        SELECT
+            b.billCode,b.productName,p.proName,b.totalPrice,b.isPayment,b.creationDate
+        FROM
+            smbms_bill AS b INNER JOIN smbms_provider as p
+        ON
+             b.providerId = p.id
+        WHERE
+            b.productName LIKE concat('%',#{productName},'%') AND p.id = #{proId}
+    </select>
+
+
+
+</mapper>
