@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.toleey.smbms.dao.user.UserMapper">
+
+	<resultMap id="userResultMap" type="User">
+		<!--主键都用id来配-->
+		<id column="id" property="id" />
+		<!--非主键都用result来配-->
+		<result column="roleName" property="userRoleName" />
+		<!--其他列名和属性名一样,会自动映射,就不用配了-->
+	</resultMap>
+
+	<select id="getUserListByCondition" parameterType="User" resultMap="userResultMap">
+		select u.*,r.roleName from
+			smbms_user as u
+				inner join
+			smbms_role as r
+			on r.id = u.userRole
+		where  userName LIKE concat('%',#{userName},'%') and userRole = #{userRole}
+	</select>
+
+	<insert id="addAUser" parameterType="User">
+		INSERT INTO
+		    `smbms`.`smbms_user` (`id`, `userCode`, `userName`, `userPassword`, `gender`, `birthday`, `phone`,
+		                          `address`, `userRole`, `createdBy`, `creationDate`, `modifyBy`, `modifyDate`)
+		    VALUES
+		           (#{id},#{userCode},#{userName},#{userPassword},#{gender},#{birthday},#{phone},
+		            #{address},#{userRole},#{createdBy},#{creationDate},#{modigyBy},#{modifyDate})
+	</insert>
+
+	<update id="updateAUser" parameterType="User">
+		UPDATE
+		    `smbms`.`smbms_user`
+		SET
+		    `id` = #{id},
+		    `userCode` = #{userCode},
+		    `userName` = #{userName},
+		    `userPassword` = #{userPassword},
+		    `gender` = #{gender},
+		    `birthday` = #{birthday},
+		    `phone` = #{phone},
+		    `address` = #{address},
+		    `userRole` = #{userRole},
+		    `createdBy` = #{createdBy},
+		    `creationDate` = #{creationDate},
+		    `modifyBy` = #{modifyBy},
+		    `modifyDate` = #{modifyDate}
+		WHERE
+		      `id` = #{id}
+	</update>
+
+	<delete id="deleteAUser" parameterType="Integer">
+		DELETE FROM smbms_user WHERE `id` = #{id}
+	</delete>
+
+</mapper>

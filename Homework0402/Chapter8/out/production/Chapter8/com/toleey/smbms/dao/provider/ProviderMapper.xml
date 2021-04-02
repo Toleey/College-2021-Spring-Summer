@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.toleey.smbms.dao.provider.ProviderMapper">
+    <resultMap id="providerResultMap" type="Provider">
+        <!--主键都用id来配-->
+        <id column="id" property="id" />
+        <!--非主键都用result来配-->
+        <!--其他列名和属性名一样,会自动映射,就不用配了-->
+    </resultMap>
+
+    <select id="getAllProviderList" resultMap="providerResultMap">
+    SELECT * FROM
+         smbms_provider
+    WHERE
+       proName LIKE concat('%',#{proName},'%')
+
+    </select>
+
+    <insert id="addAProvider" parameterType="Provider">
+        INSERT INTO
+            smbms_provider
+            (`proCode`, `proName`, `proDesc`, `proContact`, `proPhone`, `proAddress`, `proFax`, `createdBy`, `creationDate`, `modifyDate`, `modifyBy`)
+        VALUES
+            (#{proCode},#{proName},#{proDesc},#{proContact},#{proPhone},#{proAddress},#{proFax},#{createdBy},#{creationDate},#{modifyDate},#{modifyBy})
+        -- ('ice', '可乐', '哈哈哈', '111', '1123', '123', '123', 1, '2016-08-22 10:30:01', '2016-08-22 10:30:13', 1)
+    </insert>
+
+    <update id="updateAProvider" parameterType="Provider">
+        UPDATE
+            smbms_provider
+        SET
+            `proCode` = #{proCode},
+            `proName` = #{proName},
+            `proDesc` = #{proDesc},
+            `proContact` = #{proContact},
+            `proPhone` = #{proPhone},
+            `proAddress` = #{proAddress},
+            `proFax` = #{proFax},
+            `createdBy` = #{createdBy},
+            `creationDate` = #{creationDate},
+            `modifyDate` = #{modifyDate},
+            `modifyBy` = #{modifyBy}
+        WHERE
+              `id` = #{id}
+    </update>
+
+    <delete id="deleteAProvider" parameterType="Integer">
+        DELETE FROM smbms_provider WHERE `id` = #{id}
+    </delete>
+
+
+
+</mapper>
