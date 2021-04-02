@@ -1,21 +1,19 @@
 package com.toleey.smbms.controller;
 
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+@Controller
+public class indexController {
 
-public class indexController extends AbstractController {
+        @RequestMapping("index") //url地址
+        // 访问xxx/index访问下面的index.jsp
+        public String index(){ //String 返回映射的地址
+            return "index"; //访问对应的index.jsp
+        }
 
-    @Override
-    protected ModelAndView handleRequestInternal(
-            HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse
-    ) throws Exception {
-
-        ModelAndView view = new ModelAndView();
-        view.setViewName("index");
-
-        return view;
-    }
+        @RequestMapping("welcome")
+        public String welcome(){
+            return "welcome";
+        }
 }

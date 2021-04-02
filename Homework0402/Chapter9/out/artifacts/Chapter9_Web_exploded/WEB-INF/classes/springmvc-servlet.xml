@@ -12,7 +12,8 @@
         http://www.springframework.org/schema/mvc
         http://www.springframework.org/schema/mvc/spring-mvc.xsd">
         
-	<bean name="/index.html" class="com.toleey.smbms.controller.indexController"/>
+	<context:component-scan base-package="com.toleey.smbms.controller"/>
+    <mvc:annotation-driven/>
 	
 	<!-- 完成视图的对应 -->
 	<!-- 对转向页面的路径解析。prefix：前缀， suffix：后缀 -->
