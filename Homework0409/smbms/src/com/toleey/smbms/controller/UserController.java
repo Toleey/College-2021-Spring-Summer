@@ -22,8 +22,8 @@ public class UserController {
 
     @RequestMapping(value = "/login.do",method = RequestMethod.POST)
     public String doLogin(
-            @RequestParam("userName") String uerName,
-            String password,
+            @RequestParam("userCode") String userName,
+            @RequestParam("userPassword")String password,
             Model Model
     ){
             return "frame";
