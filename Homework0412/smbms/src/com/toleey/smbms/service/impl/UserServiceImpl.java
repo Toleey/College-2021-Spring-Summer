@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.sql.Connection;
+import java.util.List;
 
 import javax.annotation.Resource;
 
@@ -28,5 +29,12 @@ public class UserServiceImpl implements UserService {
         Connection conn = BaseDao.getConnection();
         User user = userDao.getUserByUserCode(conn,userCode);
         return user;
+    }
+
+    @Override
+    public List<User> findAllUsers() {
+        Connection conn = BaseDao.getConnection();
+        List<User> userList = userDao.getAllUsers(conn);
+        return userList;
     }
 }

@@ -18,13 +18,14 @@ public class User {
     private Integer modifyBy;
     private Timestamp modifyDate;
 
-//    //角色名称
-//    private String userRoleName;
+    private Integer age;
+    //角色名称
+    private String userRoleName;
 
     public User() {
     }
 
-    public User(Integer id, String userCode, String userName, String userPassword, Integer gender, Date birthday, String phone, String address, Integer userRole, Integer createdBy, Timestamp creationDate, Integer modifyBy, Timestamp modifyDate) {
+    public User(Integer id, String userCode, String userName, String userPassword, Integer gender, Date birthday, String phone, String address, Integer userRole, Integer createdBy, Timestamp creationDate, Integer modifyBy, Timestamp modifyDate, Integer age, String userRoleName) {
         this.id = id;
         this.userCode = userCode;
         this.userName = userName;
@@ -38,6 +39,8 @@ public class User {
         this.creationDate = creationDate;
         this.modifyBy = modifyBy;
         this.modifyDate = modifyDate;
+        this.age = age;
+        this.userRoleName = userRoleName;
     }
 
     public Integer getId() {
@@ -144,22 +147,19 @@ public class User {
         this.modifyDate = modifyDate;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", userCode='" + userCode + '\'' +
-                ", userName='" + userName + '\'' +
-                ", userPassword='" + userPassword + '\'' +
-                ", gender=" + gender +
-                ", birthday=" + birthday +
-                ", phone='" + phone + '\'' +
-                ", address='" + address + '\'' +
-                ", userRole=" + userRole +
-                ", createdBy=" + createdBy +
-                ", creationDate=" + creationDate +
-                ", modifyBy=" + modifyBy +
-                ", modifyDate=" + modifyDate +
-                '}';
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
+    public String getUserRoleName() {
+        return userRoleName;
+    }
+
+    public void setUserRoleName(String userRoleName) {
+        this.userRoleName = userRoleName;
     }
 }

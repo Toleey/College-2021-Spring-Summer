@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/user")
 public class UserController {
@@ -79,6 +81,13 @@ public class UserController {
             return "frame";
         }
         return "login";
+    }
+
+    @RequestMapping("/user.do")
+    public String queryUser(HttpServletRequest request){
+        List<User> userList = userService.findAllUsers();
+        request.setAttribute("userList",userList);
+        return "userlist";
     }
 
 

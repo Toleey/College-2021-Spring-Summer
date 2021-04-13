@@ -1,6 +1,8 @@
 package com.toleey.smbms.dao.user;
 
 import java.sql.Connection;
+import java.util.List;
+
 import com.toleey.smbms.entity.User;
 
 public interface UserDao {
@@ -12,4 +14,6 @@ public interface UserDao {
      * @return 查找到的某个编码的用户
      */
     public User getUserByUserCode(Connection conn, String userCode);
+
+    public List<User> getAllUsers(Connection conn);
 }
