@@ -28,6 +28,7 @@ public class UserServiceImpl implements UserService {
     public User findUserByUserCode(String userCode) {
         Connection conn = BaseDao.getConnection();
         User user = userDao.getUserByUserCode(conn,userCode);
+        BaseDao.close(conn,null,null);
         return user;
     }
 

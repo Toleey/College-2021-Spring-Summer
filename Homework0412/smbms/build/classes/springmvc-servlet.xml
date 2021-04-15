@@ -22,4 +22,17 @@
 		<property name="suffix" value=".jsp"/>
 	</bean>
 
+	<!-- 全局异常处理 适用于本项目任何的控制器 -->
+	<bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+		<property name="exceptionMappings">
+			<props>
+				<!--自定义异常-->
+				<prop key="com.toleey.smbms.exception.LoginException">login</prop>
+<!--				<prop key=""></prop>-->
+			</props>
+		</property>
+	</bean>
+
+
+
 </beans>
