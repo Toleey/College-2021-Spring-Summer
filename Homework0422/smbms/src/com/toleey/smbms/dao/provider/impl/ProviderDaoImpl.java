@@ -15,7 +15,7 @@ import java.util.List;
 public class ProviderDaoImpl implements ProviderDao {
     @Override
     public List<Provider> getProviderListByProCodeAndProName(Connection conn, String proCode, String proName) {
-        String sql = "SELECT proCode,proName,proContact,proPhone,proFax,creationDate FROM smbms_provider WHERE 1=1 ";
+        String sql = "SELECT id,proCode,proName,proContact,proPhone,proFax,creationDate FROM smbms_provider WHERE 1=1 ";
         if (proCode!=null && !proCode.equals("")){
             sql+=" AND proCode LIKE '%"+proCode+"%' ";
         }
@@ -27,6 +27,7 @@ public class ProviderDaoImpl implements ProviderDao {
             try {
                 while (rst.next()){
                     Provider provider = new Provider();
+                    provider.setId(rst.getInt("id"));
                     provider.setProCode(rst.getString("proCode"));
                     provider.setProName(rst.getString("proName"));
                     provider.setProContact(rst.getString("proContact"));
@@ -53,6 +54,67 @@ public class ProviderDaoImpl implements ProviderDao {
                 provider.getCreatedBy(), provider.getCreationDate());
 
         return line;
+    }
+
+    @Override
+    public Integer updateProviderById(Connection conn, Provider provider) {
+        String sql = "UPDATE `smbms`.`smbms_provider` SET " +
+                "`proName` = ? , `proDesc` = ? , `proContact` = ? , `proPhone` = ? , `proAddress` = ? , `proFax` = ? , " +
+                "`modifyDate` = ? , `modifyBy` = ?  " +
+                "WHERE `id` = ? ";
+        Integer line = BaseDao.executeUpdate(conn,sql,provider.getProName(),provider.getProDesc(),provider.getProContact(),
+                provider.getProPhone(),provider.getProAddress(),provider.getProFax(),
+                provider.getModifyDate(),provider.getModifyBy(),provider.getId());
+        return line;
+    }
+
+    @Override
+    public Provider getProviderById(Connection conn, Integer id) {
+        String sql = "SELECT id,proCode,proName,proContact,proAddress,proPhone,proFax,proDesc FROM smbms_provider WHERE id = ?";
+        ResultSet rst = BaseDao.executeQuery(conn,sql,id);
+        Provider provider = new Provider();
+        try {
+            if (rst.next()){
+                provider.setId(rst.getInt("id"));
+                provider.setProCode(rst.getString("proCode"));
+                provider.setProName(rst.getString("proName"));
+                provider.setProContact(rst.getString("proContact"));
+                provider.setProAddress(rst.getString("proAddress"));
+                provider.setProPhone(rst.getString("proPhone"));
+                provider.setProFax(rst.getString("proFax"));
+                provider.setProDesc(rst.getString("proDesc"));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return provider;
+    }
+
+    @Override
+    public Integer deleteProviderById(Connection conn, Integer id) {
+        String sql = "DELETE FROM smbms_provider WHERE id = ?";
+        Integer line = BaseDao.executeUpdate(conn,sql,id);
+        return line;
+    }
+
+    @Override
+    public Provider getViewProviderById(Connection conn, Integer id) {
+        String sql = "SELECT proCode,proName,proContact,proPhone,proFax,proDesc FROM smbms_provider WHERE id = ?";
+        ResultSet rst = BaseDao.executeQuery(conn,sql,id);
+        Provider provider = new Provider();
+        try {
+            if (rst.next()){
+                provider.setProCode(rst.getString("proCode"));
+                provider.setProName(rst.getString("proName"));
+                provider.setProContact(rst.getString("proContact"));
+                provider.setProPhone(rst.getString("proPhone"));
+                provider.setProFax(rst.getString("proFax"));
+                provider.setProDesc(rst.getString("proDesc"));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return provider;
     }
 
 }

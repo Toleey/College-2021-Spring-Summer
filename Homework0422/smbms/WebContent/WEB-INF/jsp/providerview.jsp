@@ -20,4 +20,4 @@
     </div>
 </section>
 <%@include file="common/foot.jsp" %>
-<script type="text/javascript" src="${pageContext.request.contextPath }/js/providerview.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath }/statics/js/providerview.js"></script>

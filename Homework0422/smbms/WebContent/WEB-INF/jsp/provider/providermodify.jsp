@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@include file="../common/head.jsp"%>
+<%@taglib uri="http://www.springframework.org/tags/form" prefix="fm"%> <%--spring表单的标记标签库 prefix前缀，可以自己起名字--%>
 
   <div class="right">
       <div class="location">
@@ -8,51 +9,52 @@
           <span>供应商管理页面 >> 供应商修改页</span>
       </div>
       <div class="providerAdd">
-          <form id="providerForm" name="providerForm" method="post" action="${pageContext.request.contextPath }provider.do">
+          <fm:form id="providerForm" modelAttribute="provider" name="providerForm" method="post" action="${pageContext.request.contextPath }/provider/modifyProviderSave.do">
+              <fm:hidden path="id" name="id"  value="${provider.id}" />
               <!--div的class 为error是验证错误，ok是验证成功-->
               <div class="">
-                  <label for="proCode">供应商编码：</label>
-                  <input type="text" name="proCode" id="proCode" value="${provider.proCode }" readonly="readonly"> 
+                  <fm:label path="proCode">供应商编码：</fm:label>
+                  <fm:input path="proCode" type="text" name="proCode" id="proCode" value="${provider.proCode }" readonly="readonly" />
               </div>
               <div>
-                  <label for="proName">供应商名称：</label>
-                 <input type="text" name="proName" id="proName" value="${provider.proName }"> 
+                  <fm:label path="proName">供应商名称：</fm:label>
+                 <fm:input path="proName" type="text" name="proName" id="proName" value="${provider.proName }" />
 			<font color="red"></font>
               </div>
               
               <div>
-                  <label for="proContact">联系人：</label>
-                  <input type="text" name="proContact" id="proContact" value="${provider.proContact }"> 
+                  <fm:label path="proContact">联系人：</fm:label>
+                  <fm:input path="proContact" type="text" name="proContact" id="proContact" value="${provider.proContact }" />
 			<font color="red"></font>
               </div>
               
               <div>
-                  <label for="proPhone">联系电话：</label>
-                  <input type="text" name="proPhone" id="proPhone" value="${provider.proPhone }"> 
+                  <fm:label path="proPhone">联系电话：</fm:label>
+                  <fm:input path="proPhone" type="text" name="proPhone" id="proPhone" value="${provider.proPhone }" />
 			<font color="red"></font>
               </div>
               
               <div>
-                  <label for="proAddress">联系地址：</label>
-                  <input type="text" name="proAddress" id="proAddress" value="${provider.proAddress }"> 
+                  <fm:label path="proAddress">联系地址：</fm:label>
+                  <fm:input path="proAddress" type="text" name="proAddress" id="proAddress" value="${provider.proAddress }" />
               </div>
               
               <div>
-                  <label for="proFax">传真：</label>
-                  <input type="text" name="proFax" id="proFax" value="${provider.proFax }">
+                  <fm:label path="proFax">传真：</fm:label>
+                  <fm:input path="proFax" type="text" name="proFax" id="proFax" value="${provider.proFax }" />
               </div>
               
               <div>
-                  <label for="proDesc">描述：</label>
-                  <input type="text" name="proDesc" id="proDesc" value="${provider.proDesc }"> 
+                  <fm:label path="proDesc">描述：</fm:label>
+                  <fm:input path="proDesc" type="text" name="proDesc" id="proDesc" value="${provider.proDesc }"/>
               </div>
               <div class="providerAddBtn">
                   <input type="button" name="save" id="save" value="保存">
 				  <input type="button" id="back" name="back" value="返回" >
               </div>
-          </form>
+          </fm:form>
       </div>
   </div>
 </section>
 <%@include file="../common/foot.jsp" %>
-<script type="text/javascript" src="${pageContext.request.contextPath }/js/providermodify.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath }/statics/js/providermodify.js"></script>

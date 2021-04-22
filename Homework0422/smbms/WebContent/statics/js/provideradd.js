@@ -23,7 +23,7 @@ $(function(){
 	 * 失焦\获焦
 	 * jquery的方法传递
 	 */
-	
+
 
 	proCode.on("blur",function(){
 		if(proCode.val() != null && proCode.val() != ""){

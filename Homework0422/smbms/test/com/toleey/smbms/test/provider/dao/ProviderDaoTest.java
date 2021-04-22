@@ -24,7 +24,7 @@ public class ProviderDaoTest {
     }
 
     @Test
-    public void testaddProviderTest(){
+    public void testAddProvider(){
         Connection conn = BaseDao.getConnection();
         ProviderDao providerDao = new ProviderDaoImpl();
         Provider provider = new Provider();
@@ -40,6 +40,25 @@ public class ProviderDaoTest {
         int line = providerDao.insertProvider(conn,provider);
         System.out.println(line);
     }
+
+    @Test
+    public void testModefiyProvider(){
+        Connection conn = BaseDao.getConnection();
+        ProviderDao providerDao = new ProviderDaoImpl();
+        Provider provider = new Provider();
+        provider.setId(29);
+        provider.setProName("Apple");
+        provider.setProContact("Tim");
+        provider.setProPhone("1234");
+        provider.setProAddress("硅谷市");
+        provider.setProFax("010123");
+        provider.setProDesc("搜索");
+        provider.setCreatedBy(1);
+        provider.setCreationDate(new Timestamp(new Date().getTime()));
+        int line = providerDao.updateProviderById(conn,provider);
+        System.out.println(line);
+    }
+
 
 
 }

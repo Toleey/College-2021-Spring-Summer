@@ -4,17 +4,17 @@ var providerObj;
 function deleteProvider(obj){
 	$.ajax({
 		type:"GET",
-		url:path+"/jsp/provider.do",
+		url:path+"/provider/deleteProvider.do",
 		data:{method:"delprovider",proid:obj.attr("proid")},
 		dataType:"json",
 		success:function(data){
-			if(data.delResult == "true"){//删除成功：移除删除行
+			if(data == "true"){//删除成功：移除删除行
 				cancleBtn();
 				obj.parents("tr").remove();
-			}else if(data.delResult == "false"){//删除失败
+			}else if(data == "false"){//删除失败
 				//alert("对不起，删除供应商【"+obj.attr("proname")+"】失败");
 				changeDLGContent("对不起，删除供应商【"+obj.attr("proname")+"】失败");
-			}else if(data.delResult == "notexist"){
+			}else if(data == "notexist"){
 				//alert("对不起，供应商【"+obj.attr("proname")+"】不存在");
 				changeDLGContent("对不起，供应商【"+obj.attr("proname")+"】不存在");
 			}else{
@@ -46,12 +46,12 @@ $(function(){
 	$(".viewProvider").on("click",function(){
 		//将被绑定的元素（a）转换成jquery对象，可以使用jquery方法
 		var obj = $(this);
-		window.location.href=path+"/jsp/provider.do?method=view&proid="+ obj.attr("proid");
+		window.location.href=path+"/provider/viewProvider.do?proid="+ obj.attr("proid");
 	});
 	
 	$(".modifyProvider").on("click",function(){
 		var obj = $(this);
-		window.location.href=path+"/jsp/provider.do?method=modify&proid="+ obj.attr("proid");
+		window.location.href=path+"/provider/modifyProvider.html?proid="+ obj.attr("proid");
 	});
 
 	$('#no').click(function () {

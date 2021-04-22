@@ -37,4 +37,38 @@ public class ProviderServiceImpl implements ProviderService {
         BaseDao.close(conn,null,null);
         return line>=1;
     }
+
+    @Override
+    public boolean modifyProvider(Provider provider) {
+        Connection conn = BaseDao.getConnection();
+        Integer line =  providerDao.updateProviderById(conn,provider);
+        BaseDao.close(conn,null,null);
+        return line>=1;
+    }
+
+    @Override
+    public Provider findProviderById(Integer id) {
+        Connection conn = BaseDao.getConnection();
+        Provider provider = providerDao.getProviderById(conn,id);
+        BaseDao.close(conn,null,null);
+        return provider;
+    }
+
+    @Override
+    public boolean deleteProviderById(Integer id) {
+        Connection conn = BaseDao.getConnection();
+        Integer line = providerDao.deleteProviderById(conn,id);
+        BaseDao.close(conn,null,null);
+        return line>=1;
+    }
+
+    @Override
+    public Provider findViewProviderById(Integer id) {
+        Connection conn = BaseDao.getConnection();
+        Provider provider = providerDao.getViewProviderById(conn,id);
+        BaseDao.close(conn,null,null);
+        return provider;
+    }
+
+
 }
