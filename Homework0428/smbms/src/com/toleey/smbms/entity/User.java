@@ -21,8 +21,8 @@ public class User {
     private String ruserPassword;
     private Integer gender;
     @Past(message = "生日只能是过去的时间")
-    @DateTimeFormat(pattern = "yyyy-MM-dd") //表单里的数据往对象里注入的时候
-    @JSONField(format = "yyyy-MM-dd")//后台数据转化成JSON数据的时候的时间格式
+    //@DateTimeFormat(pattern = "yyyy-MM-dd") //表单里的数据往对象里注入的时候
+    //@JSONField(format = "yyyy-MM-dd")//后台数据转化成JSON数据的时候的时间格式
     private Date birthday;
     private Integer age;
     @Pattern(regexp = "^(13[0-9]|14[5|7]|15[0|1|2|3|4|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\\d{8}$",message = "手机号格式不正确" )

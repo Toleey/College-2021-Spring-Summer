@@ -34,7 +34,7 @@ import java.util.Random;
 
 @Controller
 @RequestMapping("/user")
-public class UserController {   //操作用.do 展示用.html
+public class UserController extends BaseController {   //操作用.do 展示用.html
     Logger logger = Logger.getLogger(UserController.class);
 
     @Resource(name = "userService")
@@ -180,6 +180,8 @@ public class UserController {   //操作用.do 展示用.html
         model.addAttribute("userList",userList);
         return "userlist";
     }
+
+
 
     //以下是新增操作
     //打开useradd界面
@@ -438,10 +440,7 @@ public class UserController {   //操作用.do 展示用.html
             NumberFormatException nfe = new NumberFormatException("传送数据必须是数值");
             request.setAttribute("errorinfo",nfe.getMessage());
             return "error";
-
-
         }
-
         User user = userService.findViewUserById(id);
         model.addAttribute("user",user);
         return "userview";
@@ -480,7 +479,7 @@ public class UserController {   //操作用.do 展示用.html
     }
 
     //ajax查看用户
-    @RequestMapping(value = "/view",method = RequestMethod.GET,produces = {"application/json;charset=utf-8"})
+    @RequestMapping(value = "/view2",method = RequestMethod.GET,produces = {"application/json;charset=utf-8"})
     @ResponseBody
     public Object viewAjaxUser(@RequestParam("id") String id){
 
@@ -495,9 +494,20 @@ public class UserController {   //操作用.do 展示用.html
                 e.printStackTrace();
                 return JSON.toJSONString("failed");
             }
-
         }
-        return JSON.toJSONString(user);
+        return user; //不要直接返回JSON，让配置来转换成JSON
+    }
+
+    //多视图处理控制器
+    @RequestMapping(value = "/view",method = RequestMethod.GET)
+    @ResponseBody
+    public Object viewUserMulti(@RequestParam("id") String id){
+        Integer uid= null;
+        if (id != null && !"".equals(id)){
+            uid = Integer.parseInt(id);
+        }
+        User user = userService.findViewUserById(uid);
+        return user;
     }
 
 
