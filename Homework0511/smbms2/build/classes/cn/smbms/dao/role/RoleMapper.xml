@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.smbms.dao.role.RoleMapper">
+
+    <select id="getAllRoleList" resultType="Role">
+        SELECT
+               id,roleCode,roleName,creationDate
+        FROM
+             smbms_role
+    </select>
+
+    <select id="getRoleList" resultType="Role">
+        SELECT
+                id,roleName
+        FROM
+                smbms_role
+    </select>
+
+    <insert id="insertRole" parameterType="Role">
+        INSERT INTO
+               smbms_role (roleCode,roleName,createdBy,creationDate)
+        VALUES
+               (#{roleCode}, #{roleName}, #{createdBy}, #{creationDate})
+    </insert>
+
+    <delete id="deleteRoleById">
+        DELETE FROM
+            smbms_role
+        WHERE
+            id = #{id}
+    </delete>
+
+    <update id="updateRoleById" parameterType="Role">
+        UPDATE
+            smbms_role
+        SET
+            roleName = #{roleName}, modifyBy = #{modifyBy}, modifyDate = #{modifyDate}
+        WHERE
+            id = #{id}
+    </update>
+
+    <select id="getARoleById" resultType="Role">
+        SELECT
+            id,roleCode,roleName
+        FROM
+            smbms_role
+        WHERE
+            id = #{id}
+    </select>
+
+    <select id="getRoleByRoleCode" resultType="Role">
+        SELECT
+            *
+        FROM
+            smbms_role
+        WHERE
+            roleCode = #{roleCode}
+    </select>
+
+</mapper>
