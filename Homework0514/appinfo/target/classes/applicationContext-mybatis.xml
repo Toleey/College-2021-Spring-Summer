@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="   
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd   
+            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd   
+            http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd 
+            http://www.springframework.org/schema/context 
+            http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<context:component-scan
+		base-package="com.toleey.appinfo.service" />
+	<context:component-scan
+		base-package="com.toleey.appinfo.dao" />
+
+	<!-- 读取数据库配置文件 -->
+	<context:property-placeholder
+		location="classpath:database.properties" />
+
+	<!-- JNDI获取数据源(使用dbcp连接池) -->
+	<!-- 新的org.apache.commons.dbcp2.BasicDataSource 原来的org.apache.commons.dbcp.BasicDataSource -->
+	<bean id="dataSource"
+		class="org.apache.commons.dbcp2.BasicDataSource"
+		destroy-method="close" scope="singleton">
+		<!--数据库驱动 -->
+		<property name="driverClassName" value="${jdbc.driver}" />
+		<!--连接数据库的ur1 -->
+		<property name="url" value="${jdbc.url}" />
+		<!--连接数据库的用户名 -->
+		<property name="username" value="${jdbc.username}" />
+		<!--连接数据库的密码 -->
+		<property name="password" value="${jdbc.password}" />
+		<!--初始化连接数 -->
+		<property name="initialSize" value="${jdbc.initialSize}" />
+		<property name="minIdle" value="${jdbc.minIdle}" />
+
+		<property name="maxIdle" value="${jdbc.maxIdle}" />
+		<!--最大连接数 -->
+		<property name="maxTotal" value="${jdbc.maxTotal}" />
+
+		<!-- sql 心跳 -->
+		<property name="testWhileIdle" value="true" />
+		<property name="testOnBorrow" value="false" />
+		<property name="testOnReturn" value="false" />
+		<property name="validationQuery" value="select 1" />
+		<property name="timeBetweenEvictionRunsMillis" value="60000" />
+		<property name="numTestsPerEvictionRun"
+			value="${jdbc.maxTotal}" />
+	</bean>
+
+	<!-- 事务管理 -->
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<!-- 配置mybitas SqlSessionFactoryBean -->
+	<bean id="sqlSessionFactory"
+		class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="configLocation"
+			value="classpath:mybatis-config.xml" />
+	</bean>
+
+	<!-- AOP 事务处理 开始 -->
+	<aop:aspectj-autoproxy />
+	<aop:config proxy-target-class="true">
+		<aop:pointcut
+			expression="execution(* *com.toleey.appinfo.service..*(..))" id="transService" />
+		<aop:advisor pointcut-ref="transService"
+			advice-ref="txAdvice" />
+	</aop:config>
+	<tx:advice id="txAdvice"
+		transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="appinfo*" propagation="REQUIRED"
+				rollback-for="Exception" />
+		</tx:attributes>
+	</tx:advice>
+	<!-- AOP 事务处理 结束 -->
+
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.toleey.appinfo.dao" />
+	</bean>
+
+</beans>
