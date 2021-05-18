@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.toleey.appinfo.dao.backend.user.BackendUserMapper">
+
+    <select id="getBackendUser" resultType="BackendUser">
+        SELECT
+            b.id,b.userCode,b.userName,b.userType, b.createdBy, b.creationDate,
+               b.modifyBy, b.modifyDate, b.userPassword, d.typeName as userTypeName
+        FROM
+            backend_user b INNER JOIN data_dictionary d ON b.userType = d.id
+        <where>
+            d.typeCode = 'USER_TYPE'
+            AND b.userCode = 'admin'
+        </where>
+    </select>
+
+
+</mapper>

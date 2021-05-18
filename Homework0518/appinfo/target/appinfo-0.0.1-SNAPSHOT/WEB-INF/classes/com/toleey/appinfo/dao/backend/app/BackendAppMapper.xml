@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.toleey.appinfo.dao.backend.app.BackendAppMapper">
+
+    <select id="getAllAppInfoBySoftwareNameAndFlatFormIdAndCategoryLevel1AndCategoryLevel2AndCategoryLevel3" resultType="AppInfo">
+
+
+    </select>
+
+    <select id="getCountAllAppInfoBySoftwareNameAndFlatFormIdAndCategoryLevel1AndCategoryLevel2AndCategoryLevel3" resultType="AppInfo">
+
+    </select>
+
+    <select id="getAllFlatForm" resultType="DataDictionary">
+        SELECT * FROM data_dictionary WHERE typeCode = 'APP_FLATFORM';
+    </select>
+
+    <select id="getCategoryLevel1" resultType="AppCategory">
+        SELECT * FROM app_category WHERE id = 1 OR id = 2;
+    </select>
+
+    <select id="getCategoryLevel2ByCategoryLevel1" resultType="AppCategory">
+        SELECT
+               *
+        FROM
+             app_category
+        WHERE
+            parentId = #{parentId}
+    </select>
+
+    <select id="getCategoryLevel3ByCategoryLevel2" resultType="AppCategory">
+        SELECT
+            *
+        FROM
+            app_category
+        WHERE
+            parentId = #{parentId}
+
+    </select>
+
+    <select id="getAllAppInfo" resultType="AppInfo">
+        select * from app_info
+    </select>
+
+
+
+</mapper>
