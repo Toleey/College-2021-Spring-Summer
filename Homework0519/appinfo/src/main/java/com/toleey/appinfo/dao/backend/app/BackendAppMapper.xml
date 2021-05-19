@@ -13,7 +13,7 @@
             category2.categoryName AS categoryLevel2Name,
             category3.categoryName AS categoryLevel3Name,
             d2.valueName AS statusName,
-            i.downloads,v.versionNo
+            i.downloads,v.versionNo,i.versionId,i.status
         FROM
             app_info i
             INNER JOIN (SELECT * FROM data_dictionary) d1  ON i.flatformId = d1.valueId
@@ -24,9 +24,8 @@
             LEFT JOIN (SELECT * FROM app_version) v ON i.versionId = v.id
         <where>
             d1.typeCode = 'APP_FLATFORM' AND d2.typeCode = 'APP_STATUS'
-
             <if test="softwareName!=null and softwareName!=''">
-                AND softwareName like concat('%',#{softwareName},'%')
+                AND i.softwareName like concat('%',#{softwareName},'%')
             </if>
             <if test="flatformId!=null">
                 AND i.flatformId = #{flatformId}
@@ -52,7 +51,7 @@
             app_info i
             <where>
                 <if test="softwareName!=null and softwareName!=''">
-                    AND softwareName like concat('%',#{softwareName},'%')
+                    AND i.softwareName like concat('%',#{softwareName},'%')
                 </if>
                 <if test="flatformId!=null">
                     AND i.flatformId = #{flatformId}

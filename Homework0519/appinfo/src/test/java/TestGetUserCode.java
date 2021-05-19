@@ -1,5 +1,6 @@
 import com.toleey.appinfo.dao.backend.app.BackendAppMapper;
 import com.toleey.appinfo.pojo.AppCategory;
+import com.toleey.appinfo.tools.PageSupport;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,15 +10,17 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import javax.annotation.Resource;
 import java.util.List;
 
-@RunWith(value = SpringJUnit4ClassRunner.class)
-@WebAppConfiguration
 public class TestGetUserCode {
-    @Autowired
-    private BackendAppMapper backendAppMapper;
+
 
     @Test
     public void getUserCode(){
-        List<AppCategory> appCategoryList = backendAppMapper.getCategoryLevel1();
-        System.out.println(appCategoryList);
+        PageSupport pageSupport = new PageSupport();
+        pageSupport.setCurrentPageNo(1);//当前页码为1
+        pageSupport.setTotalCount(10);
+        pageSupport.setPageSize(5);//页面容量 一页显示5条
+        pageSupport.setTotalPageCountByRs();//计算总页数
+
+        System.out.println(pageSupport);
     }
 }

@@ -18,6 +18,16 @@ public class PageSupport {
 	//总页数-totalCount/pageSize（+1）
 	private int totalPageCount = 1;
 
+	//构造方法是我后来加上的，用set总是报错 /zero
+	public PageSupport() {
+	}
+
+	public PageSupport(int currentPageNo, int totalCount, int pageSize) {
+		this.currentPageNo = currentPageNo;
+		this.totalCount = totalCount;
+		this.pageSize = pageSize;
+	}
+
 	public int getCurrentPageNo() {
 		return currentPageNo;
 	}

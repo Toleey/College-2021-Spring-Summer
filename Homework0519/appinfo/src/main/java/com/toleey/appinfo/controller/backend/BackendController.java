@@ -3,9 +3,11 @@ package com.toleey.appinfo.controller.backend;
 import com.alibaba.fastjson.JSON;
 import com.toleey.appinfo.pojo.AppCategory;
 import com.toleey.appinfo.pojo.AppInfo;
+import com.toleey.appinfo.pojo.BackendUser;
 import com.toleey.appinfo.pojo.DataDictionary;
 import com.toleey.appinfo.service.backend.app.BackendAppService;
 import com.toleey.appinfo.service.backend.user.BackendUserService;
+import com.toleey.appinfo.tools.PageSupport;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -57,27 +59,35 @@ public class BackendController {
             @RequestParam(value = "queryCategoryLevel1",required = false) Integer queryCategoryLevel1,
             @RequestParam(value = "queryCategoryLevel2",required = false) Integer queryCategoryLevel2,
             @RequestParam(value = "queryCategoryLevel3",required = false) Integer queryCategoryLevel3,
+            @RequestParam(value = "pageIndex",required = false) Integer pageIndex,
             Model model){
+
         //平台
         List<DataDictionary> flatFormList = backendAppService.findAllFlatForm();
+        model.addAttribute("flatFormList",flatFormList);
         //目录1
         List<AppCategory> categoryLevel1List = backendAppService.findCategoryLevel1();
+        model.addAttribute("categoryLevel1List",categoryLevel1List);
 
-        Integer fromLineNum = 0;
-        Integer toLineNum = 5;
+        //进行分页设置
+        if (pageIndex == null){
+            pageIndex = 1;
+        }
+        PageSupport pageSupport = new PageSupport(
+                pageIndex,
+                backendAppService.findCountAllAppInfoBySoftwareNameAndFlatFormIdAndCategoryLevel1AndCategoryLevel2AndCategoryLevel3
+                (querySoftwareName,queryFlatformId,queryCategoryLevel1,queryCategoryLevel2,queryCategoryLevel3),
+                5
+        );
+        pageSupport.setTotalPageCountByRs();//计算总页数
+        model.addAttribute("pages",pageSupport);
 
+        //AppInfo数据
         List<AppInfo> appInfoList = backendAppService.
                 findAllAppInfoBySoftwareNameAndFlatFormIdAndCategoryLevel1AndCategoryLevel2AndCategoryLevel3
-                        (querySoftwareName,queryFlatformId,queryCategoryLevel1,queryCategoryLevel2,queryCategoryLevel3,fromLineNum,toLineNum);
+                        (querySoftwareName,queryFlatformId,queryCategoryLevel1,queryCategoryLevel2,queryCategoryLevel3,pageSupport.getCurrentPageNo(),pageSupport.getPageSize());
 
         model.addAttribute("appInfoList",appInfoList);
-        for (AppInfo appInfo:appInfoList
-             ) {
-            System.out.println(appInfo);
-        }
-
-        model.addAttribute("flatFormList",flatFormList);
-        model.addAttribute("categoryLevel1List",categoryLevel1List);
         return "backend/applist";
     }
     //categoryLevel2List AJAX
@@ -98,6 +108,12 @@ public class BackendController {
         List<AppCategory> categoryLevel3List = backendAppService.findCategoryLevel3ByCategoryLevel2(pid);
         return JSON.toJSONString(categoryLevel3List);
     }
+    //去往app审核页面
+    @RequestMapping("/goAppCheck.html")
+    public String goAppCheck(){
+        return "backend/appcheck";
+    }
+
 
 
 }
