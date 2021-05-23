@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.toleey.appinfo.dao.developer.app.DevAppMapper">
+
+    <select id="getAllAppInfoByDevIdAndsoftwareNameAndStatusAndFlatFormIdAndcategoryLevel1AndcategoryLevel2AndcategoryLevel3" resultType="AppInfo">
+        SELECT
+            i.id,i.softwareName,i.APKName,i.softwareSize,
+            d1.valueName AS flatformName,
+            category1.categoryName AS categoryLevel1Name,
+            category2.categoryName AS categoryLevel2Name,
+            category3.categoryName AS categoryLevel3Name,
+            d2.valueName AS statusName,
+            i.downloads,v.versionNo,
+            i.versionId,i.status
+        FROM
+            app_info i
+                INNER JOIN (SELECT * FROM data_dictionary) d1  ON i.flatformId = d1.valueId
+                INNER JOIN (SELECT * FROM app_category) category1 ON i.categoryLevel1 = category1.id
+                INNER JOIN (SELECT * FROM app_category) category2 ON i.categoryLevel2 = category2.id
+                INNER JOIN (SELECT * FROM app_category) category3 ON i.categoryLevel3 = category3.id
+                INNER JOIN (SELECT * FROM data_dictionary) d2 ON i.status = d2.valueId
+                LEFT JOIN (SELECT * FROM app_version) v ON i.versionId = v.id
+        <where>
+            d1.typeCode = 'APP_FLATFORM' AND d2.typeCode = 'APP_STATUS' AND i.createdBy = #{id}
+            <if test="softwareName!=null and softwareName!=''">
+                AND i.softwareName LIKE concat('%',#{softwareName},'%')
+            </if>
+            <if test="status!=null">
+                AND i.status = #{status}
+            </if>
+            <if test="flatformId!=null">
+                AND i.flatformId = #{flatformId}
+            </if>
+            <if test="categoryLevel1!=null">
+                AND i.categoryLevel1 = #{categoryLevel1}
+            </if>
+            <if test="categoryLevel2!=null">
+                AND i.categoryLevel2 = #{categoryLevel2}
+            </if>
+            <if test="categoryLevel3!=null">
+                AND i.categoryLevel3 = #{categoryLevel3}
+            </if>
+        </where>
+            LiMIt #{fromLineNum},#{toLineNum}
+    </select>
+
+    <select id="getCountAllAppInfoByDevIdAndsoftwareNameAndStatusAndFlatFormIdAndcategoryLevel1AndcategoryLevel2AndcategoryLevel3" resultType="Integer">
+        SELECT
+           count(*)
+        FROM
+            app_info i
+        <where>
+            i.createdBy = #{id}
+            <if test="softwareName!=null and softwareName!=''">
+                AND i.softwareName like concat('%',#{softwareName},'%')
+            </if>
+            <if test="status!=null">
+                AND i.status = #{status}
+            </if>
+            <if test="flatformId!=null">
+                AND i.flatformId = #{flatformId}
+            </if>
+            <if test="categoryLevel1!=null">
+                AND i.categoryLevel1 = #{categoryLevel1}
+            </if>
+            <if test="categoryLevel2!=null">
+                AND i.categoryLevel2 = #{categoryLevel2}
+            </if>
+            <if test="categoryLevel3!=null">
+                AND i.categoryLevel3 = #{categoryLevel3}
+            </if>
+        </where>
+    </select>
+
+    <select id="getAppStatus" resultType="DataDictionary">
+        SELECT * FROM data_dictionary WHERE typeCode = 'APP_STATUS';
+    </select>
+
+    <select id="getFlatForm" resultType="DataDictionary">
+        SELECT * FROM data_dictionary WHERE typeCode = 'APP_FLATFORM';
+    </select>
+
+    <select id="getCategoryLevel1" resultType="AppCategory">
+        SELECT * FROM app_category WHERE id = 1 OR id = 2;
+    </select>
+
+    <select id="getCategoryLevel2ByCategoryLevel1" resultType="AppCategory">
+        SELECT
+            *
+        FROM
+            app_category
+        WHERE
+            parentId = #{parentId}
+    </select>
+
+    <select id="getCategoryLevel3ByCategoryLevel2" resultType="AppCategory">
+        SELECT
+            *
+        FROM
+            app_category
+        WHERE
+            parentId = #{parentId}
+    </select>
+
+    <select id="getAppInfoByAPKName" resultType="AppInfo">
+        SELECT
+                *
+        FROM
+                app_info
+        WHERE
+                APKName = #{APKName}
+    </select>
+
+
+</mapper>
