@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.smbms.dao.bill.BillMapper">
+    <select id="getBillListByProductNameAndProviderAndIsPayment" resultType="Bill">
+        SELECT
+              b.id,b.billCode,b.productName,p.proName,b.totalPrice,b.isPayment,b.creationDate
+        FROM
+             smbms_bill b INNER JOIN smbms_provider p ON b.providerId = p.id
+        <where>
+            <if test="productName!=null">
+                productName LIKE concat('%',#{productName},'%')
+            </if>
+            <if test="providerId!=null">
+               AND providerId = #{providerId}
+            </if>
+            <if test="isPayment!=null">
+               AND  isPayment = #{isPayment}
+            </if>
+        </where>
+            limit #{fromLineNum},#{toLineNum}
+    </select>
+
+    <select id="getCountBillListByProductNameAndProviderAndIsPayment" resultType="Integer">
+        SELECT
+               count(*) as linenum
+        FROM
+             smbms_bill
+        <where>
+            <if test="productName!=null">
+                productName LIKE concat('%',#{productName},'%')
+            </if>
+            <if test="providerId!=null">
+                AND providerId = #{providerId}
+            </if>
+            <if test="isPayment!=null">
+                AND  isPayment = #{isPayment}
+            </if>
+        </where>
+    </select>
+
+    <select id="getViewBillById" resultType="Bill">
+
+        SELECT
+              b.providerId,b.billCode,b.productName,b.productUnit,b.productCount,b.totalPrice,p.proName,b.isPayment
+        FROM
+              smbms_bill b INNER JOIN smbms_provider p ON b.providerId = p.id
+        WHERE
+              b.id = #{id}
+    </select>
+
+    <insert id="insertBill">
+        INSERT INTO
+            smbms_bill
+            (billCode,productName,productDesc,productUnit,productCount,
+             totalPrice,isPayment,createdBy,creationDate,providerId)
+        VALUES
+            (#{billCode},#{productName},#{productDesc},#{productUnit},#{productCount},
+             #{totalPrice},#{isPayment},#{createdBy},#{creationDate},#{providerId})
+    </insert>
+
+    <delete id="deleteBillById" parameterType="Bill">
+        DELETE FROM
+                smbms_bill
+        WHERE
+                id=#{id}
+    </delete>
+
+    <select id="getABillById" resultType="Bill">
+        SELECT
+                *
+        FROM
+                smbms_bill
+        WHERE
+                id = #{id}
+    </select>
+
+    <update id="updateBillById" parameterType="Bill">
+        UPDATE
+            smbms_bill
+        SET
+            productName = #{productName},productUnit = #{productUnit},productCount = #{productCount},
+            totalPrice = #{totalPrice},providerId = #{providerId} ,isPayment = #{isPayment},
+            modifyBy = #{modifyBy}, modifyDate = #{modifyDate}
+        WHERE
+            id = #{id}
+    </update>
+
+
+</mapper>
