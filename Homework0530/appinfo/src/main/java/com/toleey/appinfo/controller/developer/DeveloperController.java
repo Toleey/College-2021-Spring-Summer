@@ -188,7 +188,6 @@ public class DeveloperController {
                         e.printStackTrace();
                     }
 
-
                     String logoPicPath = "/AppInfoSystem/statics/uploadfiles/"+newFileName;//LOGO图片url路径
                     appInfo.setLogoPicPath(logoPicPath); //url
 
@@ -198,7 +197,7 @@ public class DeveloperController {
                     DevUser devUser = (DevUser) session.getAttribute("devUserSession");
                     appInfo.setCreatedBy(devUser.getId());//设置createdBy
                     appInfo.setCreationDate(new Timestamp(new Date().getTime()));//设置creationDate
-
+                    appInfo.setDevId(devUser.getId());
                     devAppService.addAnAppInfo(appInfo);
                     return "redirect:/dev/goAppInfoList.html";
 
@@ -347,8 +346,8 @@ public class DeveloperController {
                     appVersion.setApkFileName(newFileName); //a.apk
 
                     DevUser devUser = (DevUser) session.getAttribute("devUserSession");
-                    appVersion.setCreatedBy(devUser.getId());//设置createdBy
-                    appVersion.setCreationDate(new Timestamp(new Date().getTime()));//设置creationDate
+                    appVersion.setModifyBy(devUser.getId());//设置createdBy
+                    appVersion.setModifyDate(new Timestamp(new Date().getTime()));//设置creationDate
 
                     devAppService.updateAnAppVersion(appVersion);
                     return "developer/appversionmodify";
@@ -421,8 +420,8 @@ public class DeveloperController {
                     appInfo.setLogoLocPath(logoLocPath); //服务器存储路径
 
                     DevUser devUser = (DevUser) session.getAttribute("devUserSession");
-                    appInfo.setCreatedBy(devUser.getId());//设置createdBy
-                    appInfo.setCreationDate(new Timestamp(new Date().getTime()));//设置creationDate
+                    appInfo.setModifyBy(devUser.getId());
+                    appInfo.setModifyDate(new Timestamp(new Date().getTime()));
 
                     devAppService.updateAnAppInfo(appInfo);
                     return "redirect:/dev/goAppInfoList.html";

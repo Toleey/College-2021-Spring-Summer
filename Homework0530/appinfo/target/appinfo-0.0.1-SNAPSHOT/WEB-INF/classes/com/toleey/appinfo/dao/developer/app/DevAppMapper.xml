@@ -135,11 +135,11 @@
         INSERT INTO
                     app_info
                 (softwareName,APKName,supportROM,interfaceLanguage,softwareSize,downloads,flatformId,categoryLevel1,categoryLevel2,
-                 categoryLevel3,status,createdBy,creationDate,appInfo,logoPicPath,logoLocPath)
+                 categoryLevel3,status,createdBy,creationDate,appInfo,logoPicPath,logoLocPath,devId)
         VALUES
                 (#{softwareName},#{APKName},#{supportROM},#{interfaceLanguage},#{softwareSize},#{downloads},#{flatformId},
                  #{categoryLevel1},#{categoryLevel2},#{categoryLevel3},#{status},#{createdBy},#{creationDate},#{appInfo},
-                 #{logoPicPath},#{logoLocPath})
+                 #{logoPicPath},#{logoLocPath},#{devId})
     </insert>
 
 
@@ -148,11 +148,10 @@
             app_info
         SET
               softwareName = #{softwareName}, supportROM = #{supportROM}, interfaceLanguage = #{interfaceLanguage},
-              softwareSize = #{softwareSize},downloads = #{download},flatformId = #{flatformId},
+              softwareSize = #{softwareSize},downloads = #{downloads},flatformId = #{flatformId},
               categoryLevel1 = #{categoryLevel1}, categoryLevel2 = #{categoryLevel2},categoryLevel3 = #{categoryLevel3},
-              status = #{status}, devId = #{devId}, appInfo = #{appInfo},
-              modifyBy = #{modifyBy}, modifyDate = #{modifyDate},  logoPicPath = #{logoPicPath},
-              logoLocPath = #{logoLocPath}
+              appInfo = #{appInfo},modifyBy = #{modifyBy}, modifyDate = #{modifyDate},
+              logoPicPath = #{logoPicPath},logoLocPath = #{logoLocPath}
         WHERE
               id = #{id}
     </update>
