@@ -1,0 +1,6 @@
+#server:
+#   servlet:
+#      context-path: /wtq
+#   port: 8000
+
+

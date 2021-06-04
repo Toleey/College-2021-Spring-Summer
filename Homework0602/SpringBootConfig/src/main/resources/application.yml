@@ -1,0 +1,36 @@
+#优先级比yaml要高
+server:
+  servlet:
+    context-path: /wtq
+  port: 8000
+
+#spring:
+#   datasource:
+#      driver-class-name: com.mysql.Driver
+
+
+#自定义一个对象数组
+#1.一般方式
+name: Toby
+person:
+  name: ${name} #Toby 自己定义
+  age: 21
+  address:
+    - Beijing
+    - Shanghai
+#2.行内方式
+person2: {name: Toby,age: 21 }
+#数组的数据,包括list数据
+#1.一般方式
+address:
+  - Beijing
+  - Shanghai
+#2.行内方式
+address2: [beijing,shanghai]
+#纯量（自变量的值） \转义
+msg1: 'hello \n springboot' #不转义
+msg2: "hello \n springboot" #转义
+
+
+
+
