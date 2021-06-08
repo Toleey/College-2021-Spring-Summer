@@ -1,0 +1,27 @@
+#spring.profiles.active=pro   #只写后面的拓展名
+
+#spring:
+#  profiles:
+#    active: dev
+---
+server:
+  port: 1314
+#第一个文档名字
+spring:
+  config:
+    activate:
+      on-profile: dev
+---
+server:
+  port: 8082
+spring:
+  config:
+    activate:
+      on-profile: pro
+---
+server:
+  port: 8083
+spring:
+  config:
+    activate:
+      on-profile: test
