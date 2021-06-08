@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.toleey.appinfo.dao.developer.app.DevAppMapper">
+
+    <select id="getAllAppInfoByDevIdAndsoftwareNameAndStatusAndFlatFormIdAndcategoryLevel1AndcategoryLevel2AndcategoryLevel3" resultType="AppInfo">
+        SELECT
+            i.id,i.softwareName,i.APKName,i.softwareSize,
+            d1.valueName AS flatformName,
+            category1.categoryName AS categoryLevel1Name,
+            category2.categoryName AS categoryLevel2Name,
+            category3.categoryName AS categoryLevel3Name,
+            d2.valueName AS statusName,
+            i.downloads,v.versionNo,
+            i.versionId,i.status
+        FROM
+            app_info i
+                INNER JOIN (SELECT * FROM data_dictionary) d1  ON i.flatformId = d1.valueId
+                INNER JOIN (SELECT * FROM app_category) category1 ON i.categoryLevel1 = category1.id
+                INNER JOIN (SELECT * FROM app_category) category2 ON i.categoryLevel2 = category2.id
+                INNER JOIN (SELECT * FROM app_category) category3 ON i.categoryLevel3 = category3.id
+                INNER JOIN (SELECT * FROM data_dictionary) d2 ON i.status = d2.valueId
+                LEFT JOIN (SELECT * FROM app_version) v ON i.versionId = v.id
+        <where>
+            d1.typeCode = 'APP_FLATFORM' AND d2.typeCode = 'APP_STATUS' AND i.createdBy = #{id}
+            <if test="softwareName!=null and softwareName!=''">
+                AND i.softwareName LIKE concat('%',#{softwareName},'%')
+            </if>
+            <if test="status!=null">
+                AND i.status = #{status}
+            </if>
+            <if test="flatformId!=null">
+                AND i.flatformId = #{flatformId}
+            </if>
+            <if test="categoryLevel1!=null">
+                AND i.categoryLevel1 = #{categoryLevel1}
+            </if>
+            <if test="categoryLevel2!=null">
+                AND i.categoryLevel2 = #{categoryLevel2}
+            </if>
+            <if test="categoryLevel3!=null">
+                AND i.categoryLevel3 = #{categoryLevel3}
+            </if>
+        </where>
+            LiMIt #{fromLineNum},#{toLineNum}
+    </select>
+
+    <select id="getCountAllAppInfoByDevIdAndsoftwareNameAndStatusAndFlatFormIdAndcategoryLevel1AndcategoryLevel2AndcategoryLevel3" resultType="Integer">
+        SELECT
+           count(*)
+        FROM
+            app_info i
+        <where>
+            i.createdBy = #{id}
+            <if test="softwareName!=null and softwareName!=''">
+                AND i.softwareName like concat('%',#{softwareName},'%')
+            </if>
+            <if test="status!=null">
+                AND i.status = #{status}
+            </if>
+            <if test="flatformId!=null">
+                AND i.flatformId = #{flatformId}
+            </if>
+            <if test="categoryLevel1!=null">
+                AND i.categoryLevel1 = #{categoryLevel1}
+            </if>
+            <if test="categoryLevel2!=null">
+                AND i.categoryLevel2 = #{categoryLevel2}
+            </if>
+            <if test="categoryLevel3!=null">
+                AND i.categoryLevel3 = #{categoryLevel3}
+            </if>
+        </where>
+    </select>
+
+    <select id="getAppStatus" resultType="DataDictionary">
+        SELECT * FROM data_dictionary WHERE typeCode = 'APP_STATUS';
+    </select>
+
+    <select id="getFlatForm" resultType="DataDictionary">
+        SELECT * FROM data_dictionary WHERE typeCode = 'APP_FLATFORM';
+    </select>
+
+    <select id="getAllCategoryLevel" resultType="AppCategory">
+        SELECT
+            *
+        FROM
+            app_category
+    </select>
+
+    <select id="getCategoryLevel1" resultType="AppCategory">
+        SELECT * FROM app_category WHERE id = 1 OR id = 2;
+    </select>
+
+    <select id="getCategoryLevel2ByCategoryLevel1" resultType="AppCategory">
+        SELECT
+            *
+        FROM
+            app_category
+        WHERE
+            parentId = #{parentId}
+    </select>
+
+    <select id="getCategoryLevel3ByCategoryLevel2" resultType="AppCategory">
+        SELECT
+            *
+        FROM
+            app_category
+        WHERE
+            parentId = #{parentId}
+    </select>
+
+    <select id="getAppInfoByAPKName" resultType="AppInfo">
+        SELECT
+                *
+        FROM
+                app_info
+        WHERE
+                APKName = #{APKName}
+    </select>
+
+    <select id="getAnAppInfoByIdToUpdate" resultType="AppInfo">
+        SELECT
+                i.*,d.valueName AS statusName
+        FROM
+                app_info i
+                INNER  JOIN data_dictionary d on i.status = d.valueId
+        WHERE
+                d.typeCode = 'APP_STATUS' AND i.id = #{id}
+    </select>
+
+    <insert id="insertAnAppInfo" parameterType="AppInfo">
+        INSERT INTO
+                    app_info
+                (softwareName,APKName,supportROM,interfaceLanguage,softwareSize,downloads,flatformId,categoryLevel1,categoryLevel2,
+                 categoryLevel3,status,createdBy,creationDate,appInfo,logoPicPath,logoLocPath,devId)
+        VALUES
+                (#{softwareName},#{APKName},#{supportROM},#{interfaceLanguage},#{softwareSize},#{downloads},#{flatformId},
+                 #{categoryLevel1},#{categoryLevel2},#{categoryLevel3},#{status},#{createdBy},#{creationDate},#{appInfo},
+                 #{logoPicPath},#{logoLocPath},#{devId})
+    </insert>
+
+
+    <update id="updateAnAppInfo" parameterType="AppInfo">
+        UPDATE
+            app_info
+        SET
+              softwareName = #{softwareName}, supportROM = #{supportROM}, interfaceLanguage = #{interfaceLanguage},
+              softwareSize = #{softwareSize},downloads = #{downloads},flatformId = #{flatformId},
+              categoryLevel1 = #{categoryLevel1}, categoryLevel2 = #{categoryLevel2},categoryLevel3 = #{categoryLevel3},
+              appInfo = #{appInfo},modifyBy = #{modifyBy}, modifyDate = #{modifyDate},
+              logoPicPath = #{logoPicPath},logoLocPath = #{logoLocPath}
+        WHERE
+              id = #{id}
+    </update>
+
+    <select id="getAnAppInfoById" resultType="AppInfo">
+        SELECT
+            i.softwareName,i.APKName,i.supportROM,i.interfaceLanguage,
+            i.softwareSize,i.downloads,d1.valueName AS flatformName,
+            category1.categoryName AS categoryLevel1Name,
+            category2.categoryName AS categoryLevel2Name,
+            category3.categoryName AS categoryLevel3Name,
+            d2.valueName AS statusName,i.appInfo,i.logoPicPath
+        FROM
+            app_info i
+            INNER JOIN (SELECT * FROM data_dictionary) d1 ON i.flatformId = d1.valueId
+            INNER JOIN (SELECT * FROM app_category) category1 ON i.categoryLevel1 = category1.id
+            INNER JOIN (SELECT * FROM app_category) category2 ON i.categoryLevel2 = category2.id
+            INNER JOIN (SELECT * FROM app_category) category3 ON i.categoryLevel3 = category3.id
+            INNER JOIN (SELECT * FROM data_dictionary) d2 ON i.status = d2.valueId
+
+        WHERE
+            d1.typeCode='APP_FLATFORM' AND d2.typeCode='APP_STATUS' AND i.id = #{id}
+    </select>
+
+    <delete id="deleteAnAppInfoById" parameterType="Integer">
+        DELETE FROM
+                app_info
+        WHERE
+                id = #{id}
+    </delete>
+
+
+
+    <insert id="insertAnAppVersion">
+        INSERT INTO
+                app_version
+                (appId,versionNo,versionSize,publishStatus,versionInfo,downloadLink,createdBy,creationDate,apkLocPath,apkFileName)
+        VALUES
+                (#{appId},#{versionNo},#{versionSize},#{publishStatus},#{versionInfo},#{downloadLink},#{createdBy},
+                 #{creationDate},#{apkLocPath},#{apkFileName})
+    </insert>
+
+    <update id="UpdateAnAppVersion">
+        UPDATE
+            app_version
+        SET
+            versionSize = #{versionSize}, publishStatus = #{publishStatus}, versionInfo = #{versionInfo},
+            modifyBy = #{modifyBy}, modifyDate = #{modifyDate}, apkLocPath = #{apkLocPath}, apkFileName = #{apkFileName}
+        WHERE
+            id = #{id}
+    </update>
+
+    <select id="getAppVersionByAppId" parameterType="Integer" resultType="AppVersion">
+        SELECT
+            i.softwareName AS appName,v.versionNo,i.softwareSize,d.valueName AS publishStatusName,v.downloadLink,
+               v.apkFileName,v.modifyDate
+        FROM
+            app_version v
+                INNER JOIN  app_info i ON i.id = v.appId
+                INNER JOIN  data_dictionary d ON v.publishStatus = d.valueId
+
+        WHERE
+            d.typeCode = 'PUBLISH_STATUS' AND i.id = #{appId}
+
+    </select>
+
+    <delete id="deleteAnAppVersionById">
+        DELETE FROM
+                    app_version
+        WHERE
+              id = #{id}
+    </delete>
+
+    <select id="getAnAppVersionById" resultType="AppVersion">
+        SELECT * FROM app_version WHERE id = #{id}
+    </select>
+
+    <update id="updateAnAPKFileToNull">
+        UPDATE `appinfodb`.`app_version` SET `downloadLink` = '', `apkLocPath` = '', `apkFileName` = '' WHERE `id` = #{id}
+    </update>
+
+    <update id="updateALogoPictureToNull">
+        UPDATE `appinfodb`.`app_info` SET `logoPicPath` = '', `logoLocPath` = '' WHERE `id` = #{id}
+    </update>
+
+    <update id="updateAppInfoStatusLaunch">
+        UPDATE `appinfodb`.`app_info` SET `status` = 4 WHERE `id` = #{id}
+    </update>
+
+    <update id="updateAppInfoStatusRemoval">
+        UPDATE `appinfodb`.`app_info` SET `status` = 5 WHERE `id` = #{id}
+    </update>
+
+
+
+</mapper>
