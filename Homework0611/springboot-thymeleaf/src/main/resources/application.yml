@@ -1,0 +1,13 @@
+#配置thymeleaf
+#配置thymeleaf缓存，开发调试不用缓存
+spring:
+  thymeleaf:
+    #配置thymeleaf缓存
+    cache: false
+    #配置模式
+    mode: HTML5
+    #文本类型
+    servlet:
+      content-type: text/html
+    prefix: classpath:/templates
+    suffix: .html

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>thymeleaf index</title>
+    <link rel="stylesheet" type="text/css" th:href="@{css/css.css}">
+</head>
+<body>
+    th链接标记：本例演示链接css样式
+  <div th:text="'hello thymeleaf!'">
+    ha
+  </div>
+    th输出变量值
+    <div th:text="'我的名字是:'+${name}"></div>
+    th输出固定对象值
+    <table bgcolor="#ffe4c4" border="1">
+        <tr> <td>编号</td> <td th:text="${user1.id}"></td></tr>
+        <tr> <td>姓名</td> <td th:text="${user1['name']}"></td></tr>
+        <tr> <td>介绍</td> <td th:text="${user1.getDescribe()}"></td></tr>
+    </table>
+    th:each遍历list中固定对象演示
+    <table bgcolor="#ffe4c4" border="2">
+        <tr>
+            <th>编号</th>
+            <th>姓名</th>
+            <th>介绍</th>
+        </tr>
+        <tr th:each="user:${userList}">
+            <td th:text="${user.id}"></td>
+            <td th:text="${user.name}"></td>
+            <td th:text="${user.describe}"></td>
+
+        </tr>
+    </table>
+
+</body>
+</html>
