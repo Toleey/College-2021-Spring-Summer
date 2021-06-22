@@ -238,66 +238,61 @@ public class DeveloperController {
     //请选择 新增版本 表单提交地址
     @RequestMapping("doVersionAdd.do")
     public String doVersionAdd(
-            AppVersion appVersion
-//            @RequestParam("a_downloadLink") MultipartFile multipartFile,
-//            HttpSession session, HttpServletRequest request, Model model
+            AppVersion appVersion,
+            @RequestParam("a_downloadLink") MultipartFile multipartFile,
+            HttpSession session, HttpServletRequest request, Model model
     ) {
+        if (multipartFile.isEmpty()){//如果图片为空，直接跳过添加部分
+            request.setAttribute("fileUploadError","请选择上传的文件");
+            return "developer/appversionadd";
+        }else{//如果图片不为空，进行添加操作
+            //1.先获得上传文件夹的位置
+            String uploadPath = "/Users/toby/Java/Projects/appinfo/src/main/webapp/statics/uploadfiles";
+            //2.获得原来的文件名
+            String oldFileName = multipartFile.getOriginalFilename();
+            //3.获得原文件的后缀
+            String suffix = FilenameUtils.getExtension(oldFileName);
+            //4.后缀判断
+            if (suffix.equals("apk")) {
+                //5.判断文件大小
+                long size = multipartFile.getSize() / 1024*1024; //MB
+                if (size > 0 && size < 500) { //判断图片大小 单位Kb 范围0kb - 500MB 不符合
+                    //6.给文件命名新的文件名
+                    String newFileName = appVersion.getAppName()+"-"+appVersion.getVersionNo()+"-devApp."+suffix;
+                    //7.定义上传文件对象
+                    File newFile = new File(uploadPath+File.separator,newFileName);
+                    //9.上传文件操作
+                    try {
+                        multipartFile.transferTo(newFile);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    //10.数据库写入路径
+                    String apkPath = "/AppInfoSystem/statics/uploadfiles/"+newFileName;
 
-        System.out.println(appVersion);
-        return "redirect:/dev/goAppInfoList.html";
+                    //路径数据库
+                    appVersion.setDownloadLink(apkPath); // /Users/toby/Java/Projects/appinfo/src/main/webapp/statics/uploadfiles/a.apk
+                    appVersion.setApkLocPath(uploadPath+File.separator+newFileName);// ../statics/uploadfiles/a.apk
+                    appVersion.setApkFileName(newFileName); //a.apk
 
+                    DevUser devUser = (DevUser) session.getAttribute("devUserSession");
+                    appVersion.setCreatedBy(devUser.getId());//设置createdBy
+                    appVersion.setCreationDate(new Timestamp(new Date().getTime()));//设置creationDate
 
-//        if (multipartFile.isEmpty()){//如果图片为空，直接跳过添加部分
-//            request.setAttribute("fileUploadError","请选择上传的文件");
-//            return "developer/appversionadd";
-//        }else{//如果图片不为空，进行添加操作
-//            //1.先获得上传文件夹的位置
-//            String uploadPath = "/Users/toby/Java/Projects/appinfo/src/main/webapp/statics/uploadfiles";
-//            //2.获得原来的文件名
-//            String oldFileName = multipartFile.getOriginalFilename();
-//            //3.获得原文件的后缀
-//            String suffix = FilenameUtils.getExtension(oldFileName);
-//            //4.后缀判断
-//            if (suffix.equals("apk")) {
-//                //5.判断文件大小
-//                long size = multipartFile.getSize() / 1024*1024; //MB
-//                if (size > 0 && size < 500) { //判断图片大小 单位Kb 范围0kb - 500MB 不符合
-//                    //6.给文件命名新的文件名
-//                    String newFileName = appVersion.getAppName()+"-"+appVersion.getVersionNo()+"-devApp."+suffix;
-//                    //7.定义上传文件对象
-//                    File newFile = new File(uploadPath+File.separator,newFileName);
-//                    //9.上传文件操作
-//                    try {
-//                        multipartFile.transferTo(newFile);
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
-//                    //10.数据库写入路径
-//                    String apkPath = "/AppInfoSystem/statics/uploadfiles/"+newFileName;
-//
-//                    //路径数据库
-//                    appVersion.setDownloadLink(apkPath); // /Users/toby/Java/Projects/appinfo/src/main/webapp/statics/uploadfiles/a.apk
-//                    appVersion.setApkLocPath(uploadPath+File.separator+newFileName);// ../statics/uploadfiles/a.apk
-//                    appVersion.setApkFileName(newFileName); //a.apk
-//
-//                    DevUser devUser = (DevUser) session.getAttribute("devUserSession");
-//                    appVersion.setCreatedBy(devUser.getId());//设置createdBy
-//                    appVersion.setCreationDate(new Timestamp(new Date().getTime()));//设置creationDate
-//
-//                    devAppService.addAnAppVersion(appVersion);
-//                    return "redirect:/dev/goAppInfoList.html";
-//
-//                }else{ //文件大小不符合
-//                    String uploadFileError = "文件大小不符合";
-//                    request.setAttribute("uploadFileError",uploadFileError);
-//                    return "developer/appversionadd";
-//                }
-//            }else{ //后缀不符合 跳过
-//                String uploadFileError = "文件后缀不符合";
-//                request.setAttribute("uploadFileError",uploadFileError);
-//                return "developer/appversionadd";
-//            }
-//        }
+                    devAppService.addAnAppVersion(appVersion);
+                    return "redirect:/dev/goAppInfoList.html";
+
+                }else{ //文件大小不符合
+                    String uploadFileError = "文件大小不符合";
+                    request.setAttribute("uploadFileError",uploadFileError);
+                    return "developer/appversionadd";
+                }
+            }else{ //后缀不符合 跳过
+                String uploadFileError = "文件后缀不符合";
+                request.setAttribute("uploadFileError",uploadFileError);
+                return "developer/appversionadd";
+            }
+        }
 
     }
 
@@ -512,6 +507,7 @@ public class DeveloperController {
     @RequestMapping("appLaunch.json")
     @ResponseBody
     public Object appLaunch(@RequestParam("appId") Integer appId) {
+        System.out.println(appId);
         boolean result = devAppService.updateAppInfoStatusLaunch(appId);
         String data = "";
         if (result == true) {
