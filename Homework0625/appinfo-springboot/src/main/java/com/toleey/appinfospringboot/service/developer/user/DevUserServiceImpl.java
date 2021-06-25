@@ -1,6 +1,6 @@
-package com.toleey.appinfospringboot.service.user;
+package com.toleey.appinfospringboot.service.developer.user;
 
-import com.toleey.appinfospringboot.dao.user.DevUserMapper;
+import com.toleey.appinfospringboot.dao.developer.user.DevUserMapper;
 import com.toleey.appinfospringboot.pojo.DevUser;
 import org.springframework.stereotype.Service;
 

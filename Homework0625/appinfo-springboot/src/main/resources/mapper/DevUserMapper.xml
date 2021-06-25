@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.toleey.appinfospringboot.dao.user.DevUserMapper">
+<mapper namespace="com.toleey.appinfospringboot.dao.developer.user.DevUserMapper">
 
     <select id="getDevUserByDevCode" resultType="DevUser">
         SELECT * FROM dev_user WHERE devCode = #{devCode}

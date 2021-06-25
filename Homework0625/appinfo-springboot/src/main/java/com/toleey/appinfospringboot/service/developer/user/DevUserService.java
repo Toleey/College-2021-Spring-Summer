@@ -1,4 +1,4 @@
-package com.toleey.appinfospringboot.service.user;
+package com.toleey.appinfospringboot.service.developer.user;
 
 import com.toleey.appinfospringboot.pojo.DevUser;
 

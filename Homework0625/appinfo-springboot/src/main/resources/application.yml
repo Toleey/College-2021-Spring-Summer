@@ -16,6 +16,6 @@ spring:
     password: root
 mybatis:
   type-aliases-package: com.toleey.appinfospringboot.pojo
-  mapper-locations: classpath:dao/**/*.xml
+  mapper-locations: classpath*:/mapper/*.xml
 
 

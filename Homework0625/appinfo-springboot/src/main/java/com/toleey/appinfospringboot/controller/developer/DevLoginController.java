@@ -1,7 +1,7 @@
-package com.toleey.appinfospringboot.controller;
+package com.toleey.appinfospringboot.controller.developer;
 
 import com.toleey.appinfospringboot.pojo.DevUser;
-import com.toleey.appinfospringboot.service.user.DevUserService;
+import com.toleey.appinfospringboot.service.developer.user.DevUserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,6 +11,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 
 @Controller
+@RequestMapping("/loginDev")
 public class DevLoginController {
 
     @Resource(name = "devUserService")
@@ -20,12 +21,7 @@ public class DevLoginController {
         this.devUserService = devUserService;
     }
 
-    @RequestMapping("/login")
-    public String devlogin(){
-        return "devlogin";
-    }
-
-    @RequestMapping("/devLogin")
+    @RequestMapping("/login.do")
     public String doLogin(
             @RequestParam("devCode") String devCode,
             @RequestParam("devPassword") String devPassword,
@@ -42,7 +38,9 @@ public class DevLoginController {
                 DevUser devUser = devUserService.findDevUserByDevCode(devCode);
                 if (devUser != null){ //能查到账户
                     if (devUser.getDevPassword() == devPassword || devUser.getDevPassword().equals(devPassword)){
+
                         session.setAttribute("devUserSession",devUser);
+
                         return "developer/main";
                     }else {
                         model.addAttribute("error","密码错误");
@@ -56,4 +54,6 @@ public class DevLoginController {
         }
 
     }
+
+
 }
