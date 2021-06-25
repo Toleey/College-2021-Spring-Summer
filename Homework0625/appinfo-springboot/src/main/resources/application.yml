@@ -1,0 +1,21 @@
+server:
+  port: 80
+  servlet:
+    context-path: /appinfo
+
+spring:
+  mvc:
+    view:
+      prefix: /WEB-INF/jsp/
+      suffix: .jsp
+    static-path-pattern: /statics/**
+  datasource:
+    url: jdbc:mysql://localhost:3306/appinfodb?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: root
+mybatis:
+  type-aliases-package: com.toleey.appinfospringboot.pojo
+  mapper-locations: classpath:dao/**/*.xml
+
+
