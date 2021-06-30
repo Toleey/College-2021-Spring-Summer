@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.toleey.smbmsspringboot.dao.user.UserMapper">
+
+    <select id="getUserByUserCode" resultType="User">
+        SELECT * FROM smbms_user 
+        <where>
+        	<if test="userCode!=null">
+        		userCode = #{userCode}
+        	</if>
+        </where>
+    </select>
+
+    <select id="getUserListByNameAndRole" resultType="User">
+        SELECT
+          u.id,userCode,userName,gender,YEAR(NOW())-YEAR(birthday) AS age,phone,roleName
+        FROM
+          smbms_user u  INNER JOIN smbms_role r  ON u.userRole = r.id
+        <where>
+            <if test="userName!=null">
+                userName like concat('%',#{userName},'%')
+            </if>
+            <if test="roleId!=null">
+                AND userRole = #{roleId}
+            </if>
+        </where>
+        limit #{fromLineNum},#{toLineNum}
+    </select>
+
+
+    <select id="getUserCountByNameAndRole" resultType="Integer">
+        SELECT
+               count(*) as linenum
+        FROM
+                smbms_user
+        <where>
+            <if test="userName!=null">
+                userName like concat('%',#{userName},'%')
+            </if>
+            <if test="roleId!=null">
+                AND userRole = #{roleId}
+            </if>
+        </where>
+    </select>
+
+
+</mapper>

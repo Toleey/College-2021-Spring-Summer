@@ -1,0 +1,21 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /smbms
+
+spring:
+  mvc:
+    view:
+      prefix: /WEB-INF/jsp/
+      suffix: .jsp
+    static-path-pattern: /statics/**
+  datasource:
+    url: jdbc:mysql://localhost:3306/smbms?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: root
+mybatis:
+  type-aliases-package: com.toleey.smbmsspringboot.pojo
+  mapper-locations: classpath*:/mapper/*.xml
+
+
